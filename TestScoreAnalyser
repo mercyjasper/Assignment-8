@@ -1,0 +1,86 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+public class TestScoreAnalyzer {
+    public static void main(String[] args) {
+        List<Integer> scores = new ArrayList<>();
+        scores.add(85);
+        scores.add(72);
+        scores.add(98);
+        scores.add(65);
+        scores.add(88);
+        scores.add(78);
+        scores.add(100);
+        scores.add(92);
+
+        // Calculate basic statistics
+        Collections.sort(scores); // Sort for median calculation
+        double averageScore = calculateAverage(scores);
+        int medianIndex = scores.size() / 2;
+        int medianScore = scores.get(medianIndex);
+
+        // Analyze scores by performance category
+        Map<String, ScoreGroup> performanceGroups = analyzeScores(scores, averageScore);
+
+        // Display results
+        System.out.println("Average Score: " + averageScore);
+        System.out.println("Median Score: " + medianScore);
+        System.out.println("\nPerformance Breakdown:");
+        for (String group : performanceGroups.keySet()) {
+            System.out.println(group + ": " + performanceGroups.get(group).count);
+            if (group.equals("Above Average") || group.equals("Below Average")) {
+                System.out.println("  Median Score: " + performanceGroups.get(group).median);
+            }
+        }
+    }
+
+    public static double calculateAverage(List<Integer> scores) {
+        double sum = 0;
+        for (int score : scores) {
+            sum += score;
+        }
+        return sum / scores.size();
+    }
+
+    public static Map<String, ScoreGroup> analyzeScores(List<Integer> scores, double average) {
+        Map<String, ScoreGroup> groups = new HashMap<>();
+        groups.put("Above Average", new ScoreGroup());
+        groups.put("At Average", new ScoreGroup());
+        groups.put("Below Average", new ScoreGroup());
+
+        List<Integer> aboveAverageScores = new ArrayList<>();
+        List<Integer> belowAverageScores = new ArrayList<>();
+        for (int score : scores) {
+            if (score > average) {
+                aboveAverageScores.add(score);
+                groups.get("Above Average").count++;
+            } else if (score < average) {
+                belowAverageScores.add(score);
+                groups.get("Below Average").count++;
+            } else {
+                groups.get("At Average").count++;
+            }
+        }
+
+        if (!aboveAverageScores.isEmpty()) {
+            Collections.sort(aboveAverageScores);
+            int medianIndex = aboveAverageScores.size() / 2;
+            groups.get("Above Average").median = aboveAverageScores.get(medianIndex);
+        }
+
+        if (!belowAverageScores.isEmpty()) {
+            Collections.sort(belowAverageScores);
+            int medianIndex = belowAverageScores.size() / 2;
+            groups.get("Below Average").median = belowAverageScores.get(medianIndex);
+        }
+
+        return groups;
+    }
+
+    static class ScoreGroup {
+        int count; 
+        int median;
+    }
+}
