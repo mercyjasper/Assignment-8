@@ -1,0 +1,25 @@
+import java.util.HashMap;
+import java.util.Map;
+public class MovieRatings {
+    public static void main(String[] args) {
+        Map<String, String> movieRatings = new HashMap<>();
+        movieRatings.put("The Shawshank Redemption", "R");
+        movieRatings.put("The Godfather", "R");
+        movieRatings.put("The Dark Knight", "PG-13");
+        movieRatings.put("The Lord of the Rings: The Return of the King", "PG-13");
+        movieRatings.put("Pulp Fiction", "R");
+        Map<String, Integer> ratingCounts = new HashMap<>();
+        int totalRatings = 0;
+        for (String rating : movieRatings.values()) {
+            if (ratingCounts.containsKey(rating)) {
+                ratingCounts.put(rating, ratingCounts.get(rating) + 1);
+            } else {
+                ratingCounts.put(rating, 1);
+            }
+            totalRatings++;
+        }
+        for (String rating : ratingCounts.keySet()) {
+            System.out.println(rating + ": " + ratingCounts.get(rating) + " movies");
+        }
+    }
+}
