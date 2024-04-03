@@ -1,0 +1,53 @@
+import java.util.ArrayList;
+import java.util.List;
+public class ProjectCompletion {
+    public static class Project {
+        String name;
+        int estimatedTime; // in days (or any chosen unit)
+        int actualTime;
+
+        public Project(String name, int estimatedTime, int actualTime) {
+            this.name = name;
+            this.estimatedTime = estimatedTime;
+            this.actualTime = actualTime;
+        }
+        public String getCompletionStatus() {
+            if (actualTime < estimatedTime) {
+                return "Early";
+            } else if (actualTime > estimatedTime) {
+                return "Late";
+            } else {
+                return "On Time";
+            }
+        }
+    }
+    public static void main(String[] args) {
+        List<Project> projects = new ArrayList<>();
+        projects.add(new Project("Project A", 10, 8));
+        projects.add(new Project("Project B", 15, 17));
+        projects.add(new Project("Project C", 7, 7));
+        int onTimeCount = 0;
+        int lateCount = 0;
+        int earlyCount = 0;
+        double totalTime = 0;
+        for (Project project : projects) {
+            totalTime += project.actualTime;
+            switch (project.getCompletionStatus()) {
+                case "On Time":
+                    onTimeCount++;
+                    break;
+                case "Late":
+                    lateCount++;
+                    break;
+                case "Early":
+                    earlyCount++;
+                    break;
+            }
+        }
+        double averageTime = totalTime / projects.size();
+        System.out.println("On Time Projects: " + onTimeCount);
+        System.out.println("Late Projects: " + lateCount);
+        System.out.println("Early Projects: " + earlyCount);
+        System.out.printf("Average Completion Time: %.2f days\n", averageTime);
+    }
+}
