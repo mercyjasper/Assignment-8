@@ -1,0 +1,44 @@
+import java.util.HashMap;
+import java.util.Map;
+public class RestaurantRatings {
+    public static void main(String[] args) {
+        Map<String, Integer> ratings = new HashMap<>();
+        ratings.put("Restaurant A", 8);
+        ratings.put("Restaurant B", 3);
+        ratings.put("Restaurant C", 7);
+        ratings.put("Restaurant D", 9);
+        ratings.put("Restaurant E", 4);
+        int[][] ratingRanges = {{1, 5}, {6, 10}};
+        Map<String, Double> rangeAverages = calculateRangeAverages(ratings, ratingRanges);
+        System.out.println("Rating Range Averages:");
+        for (String rangeKey : rangeAverages.keySet()) {
+            System.out.println(rangeKey + ": " + String.format("%.2f", rangeAverages.get(rangeKey)));
+        }
+    }
+    public static Map<String, Double> calculateRangeAverages(Map<String, Integer> ratings, int[][] ratingRanges) {
+        Map<String, Double> rangeAverages = new HashMap<>();
+        Map<String, Integer> rangeCounts = new HashMap<>();
+        for (int[] range : ratingRanges) {
+            String rangeKey = range[0] + "-" + range[1];
+            rangeAverages.put(rangeKey, 0.0);
+            rangeCounts.put(rangeKey, 0);
+        }
+        for (int rating : ratings.values()) {
+            for (int[] range : ratingRanges) {
+                if (rating >= range[0] && rating <= range[1]) {
+                    String rangeKey = range[0] + "-" + range[1];
+                    rangeAverages.put(rangeKey, rangeAverages.get(rangeKey) + rating);
+                    rangeCounts.put(rangeKey, rangeCounts.get(rangeKey) + 1);
+                    break; // Only count in one range
+                }
+            }
+        }
+        for (String rangeKey : rangeAverages.keySet()) {
+            int count = rangeCounts.get(rangeKey);
+            if (count > 0) {
+                rangeAverages.put(rangeKey, rangeAverages.get(rangeKey) / count);
+            }
+        }
+        return rangeAverages;
+    }
+}
